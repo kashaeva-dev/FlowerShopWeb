@@ -15,3 +15,7 @@ def index(request):
 def show_catalog(request):
     bouquets = Bouquet.objects.all()
     return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets})
+
+
+def test_view(request):
+    return render(request, 'flower_shop/order_select_payment.html')
