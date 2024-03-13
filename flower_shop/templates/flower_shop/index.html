@@ -99,34 +99,5 @@
       </div>
     </div>
   </section>
-  <section id="consultation">
-    <div class="container">
-      <div class="consultation">
-        <div class="title consultation__title">Оставьте заявку на консультацию</div>
-        <form action="" method="post" class="consultation__form">
-          {% csrf_token %}
-          {{ consultation_request_form.name }}
-          {{ consultation_request_form.phone_number }}
-          {% if request.method == 'POST' %}
-            {% if consultation_request_form.phone_number.errors %}
-              <div class="error">{{ consultation_request_form.phone_number.errors }}</div>
-            {% endif %}
-            {% if consultation_request_form.agree_to_privacy_policy.errors %}
-              <div class="error">
-                <ul>
-                  <li>Вы должны согласиться с политикой конфеденциальности</li>
-                </ul>
-              </div>
-            {% endif %}
-          {% endif %}
-          <div class="chekbox fic">
-            <input name="agree_to_privacy_policy" type="checkbox" class="singUpConsultation__ckekbox"
-                   checked>
-            <span class="chekbox__intro">Я согласен(а) с политикой конфидециоальности</span>
-          </div>
-          <button type="submit" class="consultation__form_btn">Отправить</button>
-        </form>
-      </div>
-    </div>
-  </section>
+  {% include 'flower_shop/consultation_footer.html' %}
 {% endblock %}
