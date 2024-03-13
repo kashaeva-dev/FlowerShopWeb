@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Staff(models.Model):
     STAFF_ROLE_CHOICES = (
         ('admin', 'Админ'),
@@ -19,3 +20,4 @@ class Staff(models.Model):
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name} - {self.role}'
+
