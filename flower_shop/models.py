@@ -2,26 +2,6 @@ from django.db import models
 from account.models import Staff
 
 
-# class Staff(models.Model):
-#     STAFF_ROLE_CHOICES = (
-#         ('admin', 'Админ'),
-#         ('florist', 'Флорист'),
-#         ('currier', 'Курьер'),
-#     )
-#     first_name = models.CharField(max_length=40, verbose_name='Имя')
-#     last_name = models.CharField(max_length=40, verbose_name='Фамилия')
-#     role = models.CharField(max_length=40, verbose_name='Роль', choices=STAFF_ROLE_CHOICES)
-#     start_date = models.DateTimeField(verbose_name='Дата начала работы', auto_now_add=True)
-#     end_date = models.DateTimeField(verbose_name='Дата увольнения', null=True, blank=True)
-#
-#     class Meta:
-#         verbose_name = 'Сотрудник'
-#         verbose_name_plural = 'Сотрудники'
-#
-#     def __str__(self):
-#         return f'{self.telegram_id}: {self.first_name} {self.last_name} - {self.role}'
-
-
 class Occasion(models.Model):
     name = models.CharField(max_length=40, verbose_name='Повод')
 

@@ -24,5 +24,11 @@ from flower_shop import views
 urlpatterns = [
     path('bouquet/<int:bouquet_id>/', views.view_bouquet, name='view_bouquet'),
     path('admin/', admin.site.urls),
+    path('', include('flower_shop.urls')),
     path('api-auth/', include('rest_framework.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
