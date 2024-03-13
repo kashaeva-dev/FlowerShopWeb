@@ -384,6 +384,7 @@ margin-bottom: 30px;
 	line-height: 145.02%;
 	color: #000000;
 	margin-right: 52px;
+	min-width: 65px;
 }
 .card_items_intro {
 	display: block;
