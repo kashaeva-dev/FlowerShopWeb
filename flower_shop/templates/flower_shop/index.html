@@ -31,7 +31,7 @@
               ситуацию</p>
             <button class="btn banner__btn">Подобрать букет</button>
           </div>
-          <img src="{% static "img/bannerImg.png" %}" alt="banner Img" class="banner__img">
+          <img src="{% static 'img/bannerImg.png' %}" alt="banner Img" class="banner__img">
         </div>
       </div>
     </section>
@@ -44,27 +44,15 @@
       <div class="recommended p100">
         <div class="title">Рекомендуем</div>
         <div class="recommended__elems ficb">
-          <div class="recommended__block">
-            <a href="#"><img src="{% static "img/recommendedBg1.jpg" %}" alt="flower"></a>
-            <div class="recommended__block_elems ficb">
-              <span class="recommended__block_intro">Летнее утро</span>
-              <span class="recommended__block_price">3 600 руб</span>
+          {% for bouquet in recommended_bouquets %}
+            <div class="recommended__block">
+              <a href="#"><img src="{% static 'img/recommendedBg1.jpg' %}" alt="flower"></a>
+              <div class="recommended__block_elems ficb">
+                <span class="recommended__block_intro">Летнее утро</span>
+                <span class="recommended__block_price">3 600 руб</span>
+              </div>
             </div>
-          </div>
-          <div class="recommended__block">
-            <a href="#"><img src="{% static "img/recommendedBg2.jpg" %}" alt="flower"></a>
-            <div class="recommended__block_elems ficb">
-              <span class="recommended__block_intro">Зимняя сказка</span>
-              <span class="recommended__block_price">4 100 руб</span>
-            </div>
-          </div>
-          <div class="recommended__block">
-            <a href="#"><img src="{% static "img/recommendedBg3.jpg" %}" alt="flower"></a>
-            <div class="recommended__block_elems ficb">
-              <span class="recommended__block_intro">Нежный</span>
-              <span class="recommended__block_price">2 900 руб</span>
-            </div>
-          </div>
+          {% endfor %}
         </div>
         <button class="btn recommended__btn">Показать всю коллекцию</button>
       </div>

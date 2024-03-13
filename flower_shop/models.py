@@ -22,6 +22,7 @@ class Bouquet(models.Model):
                                       verbose_name='Повод',
                                       related_name='bouquets',
                                       )
+    is_recommended = models.BooleanField(verbose_name='Рекомендуемый', default=False)
     price = models.PositiveIntegerField(verbose_name='Цена')
 
     class Meta:

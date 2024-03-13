@@ -8,4 +8,5 @@ def view_bouquet(request, bouquet_id):
     return render(request, 'flower_shop/card.html', context={'bouquet': bouquet})
 
 def index(request):
-    return render(request, 'flower_shop/index.html')
+    recommended_bouquets = Bouquet.objects.filter(recommended=True)[:3]
+    return render(request, 'flower_shop/index.html', context={'recommended_bouquets': recommended_bouquets})
