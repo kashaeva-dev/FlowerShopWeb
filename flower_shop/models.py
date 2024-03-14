@@ -162,6 +162,7 @@ class Order(models.Model):
                                      verbose_name='Тип оплаты',
                                      related_name='orders'
                                      )
+    is_paid = models.BooleanField(verbose_name='Оплачен', default=False)
 
     class Meta:
         verbose_name = 'Заказ'
