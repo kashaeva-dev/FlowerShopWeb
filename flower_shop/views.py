@@ -1,6 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from flower_shop.models import Bouquet
-
+from django.conf import settings
+from django.http import JsonResponse
+import stripe
+stripe.api_key = settings.STRIPE_SECRET_KEY
+STRIPE_KEY = settings.STRIPE_PUBLIC_KEY 
 
 def view_bouquet(request, bouquet_id):
     bouquet = get_object_or_404(Bouquet, pk=bouquet_id)
@@ -19,3 +23,23 @@ def show_catalog(request):
 
 def test_view(request):
     return render(request, 'flower_shop/order_select_payment.html')
+
+
+def checkout(request):
+    return render(request, 'flower_shop/order-step.html', context={'STRIPE_KEY':STRIPE_KEY})
+
+def charge(request):
+    if request.method == 'POST':
+        amount = 500  
+        try:
+            charge = stripe.Charge.create(
+                amount=amount,
+                currency='usd',
+                description='Оплата заказа',
+                source=request.POST['stripeToken']
+            )
+            return JsonResponse({'success': True})
+        except stripe.error.CardError as e:
+            return JsonResponse({'error': str(e)})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
