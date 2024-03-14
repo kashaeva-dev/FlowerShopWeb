@@ -73,6 +73,7 @@ input::placeholder {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	flex-wrap: wrap;
 }
 .ficc {
 	display: flex;
@@ -166,7 +167,7 @@ bottom: 0;
     align-items: end;
 	width: 398px;
 	height: 400px;
-	margin-right: 9px;
+	margin-bottom: 9px;
 	background-size: cover;
     background-position: center;
 }
