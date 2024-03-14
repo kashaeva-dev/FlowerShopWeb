@@ -7,47 +7,61 @@
 {% endblock %}
 
 {% block context %}
+<script src="https://js.stripe.com/v3/"></script>
 <section id="orderStep">
   <div class="container">
     <div class="order orderStep">
       <div class="order__block">
         <div class="order_items">
           <div class="title">Оплата</div>
-          <form action="#" class="order__form orderStep_form">
-            <div class="order__form_block">
-              <div class="order__form_items">
-                <div class="order__form_intro">номер карты</div>
-                <input type="text" name="cardNum" class="order__form_input orderStep_form_input"
-                       placeholder="Введите номер" required>
-                <div class="order__form_item fic">
-                  <input type="text" name="cardMm" class="order__form_input orderStep_form_input" placeholder="ММ"
-                         required>
-                  <input type="text" name="cardGg" class="order__form_input orderStep_form_input" placeholder="ГГ"
-                         required>
-                </div>
+          <form action="{% url 'charge' %}" method="post" id="payment-form">
+        {% csrf_token %}
+        <div class="form-row">
+            <label for="card-element">
+                Кредитная карта или дебетовая карта
+            </label>
+            <div id="card-element">
+                <!-- Сюда подставится элемент Card UI -->
+            </div>
+            <div id="card-errors" role="alert"></div>
+        </div>
+        <button>Оплатить</button>
+    </form>
 
-                <input type="text" name="cardFname" class="order__form_input orderStep_form_input"
-                       placeholder="Имя владельца" required>
-                <input type="text" name="cardCvc" class="order__form_input orderStep_form_input" placeholder="CVC"
-                       required>
-              </div>
-              <div class="order__form_items">
-                <div class="order__form_intro">Ваш e-mail (необязательно)</div>
-                <input type="email" name="mail" class="order__form_input orderStep_form_input"
-                       placeholder="pochta@mail.ru">
-              </div>
-            </div>
-            <div class="order__form_line"></div>
-            <div class="order__form_btns ficb">
-              <button class="btn order__form_pay">Оплатить</button>
-              <button class="btn order__form_btn">Назад</button>
-            </div>
-          </form>
+    <script>
+        var stripe = Stripe("{{STRIPE_KEY}}");
+        var elements = stripe.elements();
+        var cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            stripe.createToken(cardElement).then(function(result) {
+                if (result.error) {
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+
+        function stripeTokenHandler(token) {
+            var form = document.getElementById('payment-form');
+            var hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripeToken');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+            form.submit();
+        }
+    </script>
         </div>
         <!-- <div class="blockImgHiden"></div> -->
       </div>
     </div>
   </div>
-  <img src="{% static "img/orderImg.jpg" %}" alt="orderImg" class="order__img">
+  <img src="{% static 'img/orderImg.jpg' %}" alt="orderImg" class="order__img">
 </section>
 {% endblock %}
