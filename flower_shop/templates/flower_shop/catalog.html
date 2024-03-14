@@ -23,10 +23,43 @@
             </div>
             {% endfor %}
           </div>
-          <button class="btn largeBtn catalog__btn">Показать ещё</button>
+          <button class="btn largeBtn catalog__btn" data-page="2">Показать ещё</button>
         </div>
       </div>
     </div>
   </section>
+<script>
+  let loadMoreBtn = document.querySelector('.catalog__btn');
+  let catalogBlock = document.querySelector('.recommended__elems');
+  loadMoreBtn.onclick = function () {
+    let page = this.getAttribute('data-page');
+    fetch(`/bouquets/ajax/?page=${page}`)
+      .then(response => response.json())
+      .then(data => {
+          console.log(data);
+          let bouquets = JSON.parse(data.bouquets);
+          bouquets.forEach(bouquet => {
+            let div = document.createElement('div');
+            div.classList.add('recommended__block');
+            div.style.backgroundImage = `url('/media/${bouquet.fields.image}')`;
+            div.innerHTML = `
+              <a href="/bouquet/${bouquet.fields.id}" class="recommended__block_link"></a>
+              <div class="recommended__block_elems ficb">
+                <span class="recommended__block_intro">${bouquet.fields.name}</span>
+                <span class="recommended__block_price">${bouquet.fields.price} руб.</span>
+              </div>
+            `;
+            catalogBlock.appendChild(div);
+          });
+
+          if (data.has_next) {
+            loadMoreBtn.setAttribute('data-page', data.next_page_number);
+          } else {
+            loadMoreBtn.remove();
+          }
+
+      });
+    }
+</script>
   {% include 'flower_shop/consultation_footer.html' %}
 {% endblock %}

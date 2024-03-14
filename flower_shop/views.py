@@ -1,4 +1,7 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
+from django.core import serializers
+
 from flower_shop.models import Bouquet
 from django.conf import settings
 from django.http import JsonResponse
@@ -17,7 +20,9 @@ def index(request):
 
 
 def show_catalog(request):
-    bouquets = Bouquet.objects.all()
+    all_bouquets = Bouquet.objects.all()
+    paginator = Paginator(all_bouquets, 6)
+    bouquets = paginator.get_page(1)
     return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets})
 
 
@@ -43,3 +48,19 @@ def charge(request):
             return JsonResponse({'error': str(e)})
         except Exception as e:
             return JsonResponse({'error': str(e)})
+
+
+def bouquet_list_ajax(request):
+    all_bouquets = Bouquet.objects.all()
+    paginator = Paginator(all_bouquets, 6)
+
+    page_number = request.GET.get('page')
+    bouquets = paginator.get_page(page_number)
+
+    bouquets_serialized = serializers.serialize('json', bouquets)
+
+    return JsonResponse({
+        'bouquets': bouquets_serialized,
+        'has_next': bouquets.has_next(),
+        'next_page_number': bouquets.next_page_number() if bouquets.has_next() else '',
+    })

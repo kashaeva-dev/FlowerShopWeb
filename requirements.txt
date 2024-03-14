@@ -2,3 +2,4 @@ Django==5.0.3
 Pillow==10.2.0
 environs==11.0.0
 djangorestframework==3.14.0
+stripe-8.6.0

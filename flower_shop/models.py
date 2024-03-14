@@ -145,6 +145,8 @@ class Order(models.Model):
                                             on_delete=models.PROTECT,
                                             verbose_name='Интервал доставки',
                                             related_name='orders',
+                                            null=True,
+                                            blank=True,
                                             )
     delivery_address = models.CharField(max_length=200, verbose_name='Адрес доставки')
     contact_phone = models.CharField(max_length=20, verbose_name='Контактный телефон')
@@ -157,12 +159,13 @@ class Order(models.Model):
                                 null=True,
                                 blank=True,
                                 )
-    payment_type = models.ForeignKey(PaymentType,
-                                     on_delete=models.PROTECT,
-                                     verbose_name='Тип оплаты',
-                                     related_name='orders'
-                                     )
-    is_paid = models.BooleanField(verbose_name='Оплачен', default=False)
+    # payment_type = models.ForeignKey(PaymentType,
+    #                                  on_delete=models.PROTECT,
+    #                                  verbose_name='Тип оплаты',
+    #                                  related_name='orders',
+    #                                  default=1,
+    #                                  )
+    # is_paid = models.BooleanField(verbose_name='Оплачен', default=False)
 
     class Meta:
         verbose_name = 'Заказ'
