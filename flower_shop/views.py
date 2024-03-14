@@ -21,6 +21,10 @@ def show_catalog(request):
     return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets})
 
 
+def test_view(request):
+    return render(request, 'flower_shop/order_select_payment.html')
+
+
 def checkout(request):
     return render(request, 'flower_shop/order-step.html', context={'STRIPE_KEY':STRIPE_KEY})
 

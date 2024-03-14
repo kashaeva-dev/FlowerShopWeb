@@ -39,7 +39,7 @@ input::placeholder {
 	font-size: 36px;
 	line-height: 103.52%;
 	color: #17CF97;
-	margin-bottom: 30px;
+	padding-bottom: 30px;
 }
 .btn {
 	background: #17CF97;

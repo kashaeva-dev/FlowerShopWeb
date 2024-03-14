@@ -93,6 +93,29 @@ class ConsultingStatusHistory(models.Model):
         return f'{self.consulting}: {self.status}'
 
 
+class PaymentType(models.Model):
+    name = models.CharField(max_length=40, verbose_name='Тип оплаты')
+
+    class Meta:
+        verbose_name = 'Тип оплаты'
+        verbose_name_plural = 'Типы оплаты'
+
+    def __str__(self):
+        return self.name
+
+
+class DeliveryInterval(models.Model):
+    start_time = models.TimeField(verbose_name='Время начала')
+    end_time = models.TimeField(verbose_name='Время окончания')
+
+    class Meta:
+        verbose_name = 'Интервал доставки'
+        verbose_name_plural = 'Интервалы доставки'
+
+    def __str__(self):
+        return f'{self.start_time} - {self.end_time}'
+
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ('new', 'Новый'),
@@ -116,7 +139,13 @@ class Order(models.Model):
     status = models.CharField(max_length=40, verbose_name='Статус', choices=STATUS_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Дата изменения', auto_now=True)
-    delivery_date = models.DateTimeField(verbose_name='Дата доставки')
+    delivery_date = models.DateField(verbose_name='Дата доставки')
+    ealiest_delivery = models.BooleanField(verbose_name='Ранняя доставка', default=False)
+    delivery_interval = models.ForeignKey(DeliveryInterval,
+                                            on_delete=models.PROTECT,
+                                            verbose_name='Интервал доставки',
+                                            related_name='orders',
+                                            )
     delivery_address = models.CharField(max_length=200, verbose_name='Адрес доставки')
     contact_phone = models.CharField(max_length=20, verbose_name='Контактный телефон')
     contact_name = models.CharField(max_length=40, verbose_name='Контактное лицо')
@@ -128,6 +157,12 @@ class Order(models.Model):
                                 null=True,
                                 blank=True,
                                 )
+    payment_type = models.ForeignKey(PaymentType,
+                                     on_delete=models.PROTECT,
+                                     verbose_name='Тип оплаты',
+                                     related_name='orders'
+                                     )
+    is_paid = models.BooleanField(verbose_name='Оплачен', default=False)
 
     class Meta:
         verbose_name = 'Заказ'
