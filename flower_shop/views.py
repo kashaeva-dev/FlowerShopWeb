@@ -26,8 +26,8 @@ def show_catalog(request):
     return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets})
 
 
-def test_view(request):
-    return render(request, 'flower_shop/order_select_payment.html')
+def consultation(request):
+    return render(request, 'flower_shop/consultation.html')
 
 
 def checkout(request):

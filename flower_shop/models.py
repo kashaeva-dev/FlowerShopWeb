@@ -1,5 +1,6 @@
 from django.db import models
 from account.models import Staff
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Occasion(models.Model):
@@ -50,13 +51,13 @@ class Consulting(models.Model):
                                 verbose_name='Флорист',
                                 limit_choices_to={'role': 'florist'},
                                 related_name='consultings',
+                                null=True,
+                                blank=True,
                                 )
-    status = models.ManyToManyField(ConsultingStatus,
-                                    through='ConsultingStatusHistory',
-                                    )
     created_at = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Дата изменения', auto_now=True)
-    contact_phone = models.CharField(max_length=40, verbose_name='Контактный телефон')
+    client_name = models.CharField(max_length=100, verbose_name='Имя клиента')
+    contact_phone = PhoneNumberField(verbose_name='Контактный телефон')
     first_call_at = models.DateTimeField(verbose_name='Дата и время звонка', null=True, blank=True)
     occasion = models.ForeignKey(Occasion,
                                  on_delete=models.PROTECT,
@@ -64,12 +65,17 @@ class Consulting(models.Model):
                                  related_name='consultings',
                                  )
 
+
+    def current_status(self):
+        return self.status_history.order_by('-status_created_at').first().status.name if self.status_history.exists() else None
+
+
     class Meta:
         verbose_name = 'Консультация'
         verbose_name_plural = 'Консультации'
 
     def __str__(self):
-        return f'{self.pk}: {self.florist} - {self.created_at}'
+        return f'{self.pk}: {self.client_name} - {self.occasion.name} - {self.created_at.strftime("%d.%m.%Y %H:%M")} - {self.current_status()}'
 
 
 class ConsultingStatusHistory(models.Model):
@@ -83,7 +89,7 @@ class ConsultingStatusHistory(models.Model):
                                verbose_name='Статус',
                                related_name='status_history',
                                )
-    created_at = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
+    status_created_at = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
 
     class Meta:
         verbose_name = 'История статусов консультации'
@@ -159,13 +165,13 @@ class Order(models.Model):
                                 null=True,
                                 blank=True,
                                 )
-    # payment_type = models.ForeignKey(PaymentType,
-    #                                  on_delete=models.PROTECT,
-    #                                  verbose_name='Тип оплаты',
-    #                                  related_name='orders',
-    #                                  default=1,
-    #                                  )
-    # is_paid = models.BooleanField(verbose_name='Оплачен', default=False)
+    payment_type = models.ForeignKey(PaymentType,
+                                     on_delete=models.PROTECT,
+                                     verbose_name='Тип оплаты',
+                                     related_name='orders',
+                                     default=1,
+                                     )
+    is_paid = models.BooleanField(verbose_name='Оплачен', default=False)
 
     class Meta:
         verbose_name = 'Заказ'
@@ -173,5 +179,5 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.bouquet.name}: ' \
-               f' {self.delivery_date.strftime("%d.%m.%Y %H:%M")}' \
-               f'по адресу: {self.delivery_address} - {self.status}'
+               # f' {self.delivery_date.strftime("%d.%m.%Y %H:%M")}' \
+               # f'по адресу: {self.delivery_address} - {self.status}'
