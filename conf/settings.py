@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'flower_shop.apps.FlowerShopConfig',
     'rest_framework',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

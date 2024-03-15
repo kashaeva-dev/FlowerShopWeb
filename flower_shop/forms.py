@@ -1,5 +1,6 @@
 from django import forms
-from .models import DeliveryInterval, Order, Bouquet
+from .models import DeliveryInterval, Order, Bouquet, Consulting
+from phonenumber_field.formfields import PhoneNumberField
 
 
 class OrderForm(forms.Form):
@@ -9,7 +10,8 @@ class OrderForm(forms.Form):
                           widget=forms.TextInput(attrs={'class': 'order__form_input', 'placeholder': '+ 7 (999) 000 '
                                                                                                      '00 00'}))
     adres = forms.CharField(label='Адрес доставки', max_length=100,
-                            widget=forms.TextInput(attrs={'class': 'order__form_input', 'placeholder': 'Адрес доставки'}))
+                            widget=forms.TextInput(
+                                attrs={'class': 'order__form_input', 'placeholder': 'Адрес доставки'}))
     orderTime = forms.ModelChoiceField(label='Время заказа',
                                        queryset=DeliveryInterval.objects.all(),
                                        empty_label=None,
@@ -24,7 +26,7 @@ class OrderForm(forms.Form):
         fname = cleaned_data['fname']
         tel = cleaned_data['tel']
         adres = cleaned_data['adres']
-        orderTime = cleaned_data['orderTime']
+        order_time = cleaned_data['orderTime']
 
         bouquet = Bouquet.objects.get(id=self.bouquet_id)
 
@@ -32,7 +34,35 @@ class OrderForm(forms.Form):
             contact_name=fname,
             contact_phone=tel,
             delivery_address=adres,
-            delivery_interval=orderTime,
+            delivery_interval=order_time,
             bouquet=bouquet
         )
         return order
+
+
+class CustomPhoneNumberField(PhoneNumberField):
+    def to_python(self, value):
+        if value and not value.startswith('+'):
+            value = '+7' + value
+        return super(CustomPhoneNumberField, self).to_python(value)
+
+
+class ConsultingForm(forms.ModelForm):
+    client_name = forms.CharField(label='Имя клиента',
+                                  max_length=100,
+                                  widget=forms.TextInput(attrs={'placeholder': 'Введите Имя', 'required': 'required'}))
+    contact_phone = CustomPhoneNumberField(label='Телефон',
+                                           max_length=15,
+                                           error_messages={'invalid': 'Введите корректный номер телефона.'},
+                                           widget=forms.TextInput(attrs={'placeholder': 'Введите Имя',
+                                                                         'required': 'required'}))
+    agreement = forms.BooleanField(required=True,
+                                   error_messages={
+                                       'required': 'Пожалуйста, подтвердите согласие на обработку персональных'
+                                                   ' данных.'},
+                                   widget=forms.CheckboxInput(attrs={'checked': 'checked',
+                                                                     }))
+
+    class Meta:
+        model = Consulting
+        fields = ['client_name', 'contact_phone', 'agreement']
