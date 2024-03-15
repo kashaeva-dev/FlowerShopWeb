@@ -5,6 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block meta %}{% endblock %}
   <title>{% block title %}Flower Shop{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,10 +18,10 @@
   <header id="header">
     <div class="container">
       <div class="header ficb">
-        <a href="/"><img src="{% static "img/logo.svg" %}" alt="logo" class="logo"></a>
+        <a href="/"><img src="{% static 'img/logo.svg' %}" alt="logo" class="logo"></a>
         <nav>
           <ul class="menu ficc">
-            <li class="menu__item"><a href="#" class="menu__item_link">Каталог</a></li>
+            <li class="menu__item"><a href="{% url 'catalog' %}" class="menu__item_link">Каталог</a></li>
             <li class="menu__item"><a href="#" class="menu__item_link">Рекомендации</a></li>
             <li class="menu__item"><a href="#" class="menu__item_link">Контакты</a></li>
           </ul>
@@ -37,10 +38,10 @@
 <footer id="footer">
   <div class="container">
     <div class="footer">
-      <a href="/"><img src="{% static "img/logo.svg" %}" alt="logo" class="logo footer__logo"></a>
+      <a href="/"><img src="{% static 'img/logo.svg' %}" alt="logo" class="logo footer__logo"></a>
       <nav>
         <ul class="menu footer__menu ficc">
-          <li class="menu__item"><a href="#" class="menu__item_link">Каталог</a></li>
+          <li class="menu__item"><a href="{% url 'catalog' %}" class="menu__item_link">Каталог</a></li>
           <li class="menu__item"><a href="#" class="menu__item_link">Рекомендации</a></li>
           <li class="menu__item"><a href="#" class="menu__item_link">Контакты</a></li>
         </ul>

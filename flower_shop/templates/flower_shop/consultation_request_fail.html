@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block fonts %}
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Unbounded:wght@700&display=swap"
+        rel="stylesheet">
+{% endblock %}
+{% block context %}
+<section id="singUpConsultation">
+  <div class="container">
+    <div class="singUpConsultation">
+      <div class="information__fail title">Не получилось отправить заявку на консультацию!</div>
+      <p class="information__text">Пожалуйста, свяжитесь с нами по телефону: +7 (916) 555-55-77 или попробуйте оформить заявку позже.</p>
+    </div>
+  </div>
+  <img src="{% static 'img/singUpConsultationImg.jpg' %}" alt="singUpConsultationImg" class="singUpConsultation__img">
+</section>
+{% endblock %}

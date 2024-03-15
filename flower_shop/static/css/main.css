@@ -262,6 +262,7 @@ color: #2D2D2D;
 margin-bottom: 19px;
 	text-align: center;
 color: #FFFFFF;
+padding-bottom: 0px;
 }
 .consultation__form {
 	width: 655px;
@@ -606,6 +607,7 @@ height: 57px;
 	padding-right: 15px;
 	border: none;
 	font-size: 16px;
+
 line-height: 103.52%;
 /* identical to box height, or 17px */
 /*	margin-right: 10px;*/
@@ -755,13 +757,51 @@ margin-bottom: 5px;
 }
 .chekbox__intro {
 	font-size: 10px;
-line-height: 145.02%;
-/* identical to box height, or 15px */
+    line-height: 145.02%;
+    opacity: 0.3;
+    color: #2D2D2D;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 
+.order__form_prefix {
+    width: 50px;
+    padding-left: 15px;
+    padding-right: 0px;
+}
 
-/* черный */
+.input__error {
+    font-style: italic;
+    font-size: 12px;
+    color: red;
+    max-width: 240px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.input__error_agreement {
+    max-width: 600px;
+    margin-bottom: 20px;
+}
 
-color: #2D2D2D;
+.consulting__form_elems {
+    align-items: start;
+}
 
-opacity: 0.3;
+.information__success {
+    position: relative;
+    top: 30%;
+    max-width: 500px;
+}
+
+.information__fail {
+    position: relative;
+    top: 30%;
+    max-width: 500px;
+    color: red;
+}
+
+.information__text {
+    position: absolute;
+    top: 50%;
+    max-width: 500px;
 }

@@ -63,7 +63,10 @@ class Consulting(models.Model):
                                  on_delete=models.PROTECT,
                                  verbose_name='Повод',
                                  related_name='consultings',
+                                 null=True,
+                                 blank=True,
                                  )
+    agreement = models.BooleanField(verbose_name='Согласие на обработку персональных данных', default=False)
 
 
     def current_status(self):
@@ -75,12 +78,12 @@ class Consulting(models.Model):
         verbose_name_plural = 'Консультации'
 
     def __str__(self):
-        return f'{self.pk}: {self.client_name} - {self.occasion.name} - {self.created_at.strftime("%d.%m.%Y %H:%M")} - {self.current_status()}'
+        return f'{self.pk}: {self.client_name} - {self.created_at.strftime("%d.%m.%Y %H:%M")} - {self.current_status()}'
 
 
 class ConsultingStatusHistory(models.Model):
     consulting = models.ForeignKey(Consulting,
-                                   on_delete=models.PROTECT,
+                                   on_delete=models.CASCADE,
                                    verbose_name='Консультация',
                                    related_name='status_history',
                                    )
