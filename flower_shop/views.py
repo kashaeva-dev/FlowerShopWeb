@@ -63,7 +63,7 @@ def find_bouquet(request):
 def view_bouquet(request, bouquet_id):
     form = ConsultingForm()
     bouquet = get_object_or_404(Bouquet, pk=bouquet_id)
-    return render(request, 'flower_shop/card.html', context={'bouquet': bouquet})
+    return render(request, 'flower_shop/card.html', context={'bouquet': bouquet, 'form': form})
 
 
 def index(request):

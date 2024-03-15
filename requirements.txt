@@ -7,3 +7,4 @@ django_phonenumber_field==7.3.0
 phonenumbers==8.13.32
 Babel==2.14
 python-telegram-bot==13.2
+pytelegrambotapi==4.16.1
