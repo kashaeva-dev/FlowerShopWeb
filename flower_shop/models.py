@@ -36,6 +36,9 @@ class Bouquet(models.Model):
     def __str__(self):
         return self.name
 
+    def get_orders(self):
+        return self.orders.all().count()
+
 
 class ConsultingStatus(models.Model):
     name = models.CharField(max_length=40, verbose_name='Статус')
