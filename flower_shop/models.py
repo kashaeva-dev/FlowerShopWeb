@@ -139,7 +139,7 @@ class Order(models.Model):
     status = models.CharField(max_length=40, verbose_name='Статус', choices=STATUS_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Дата изменения', auto_now=True)
-    delivery_date = models.DateField(verbose_name='Дата доставки')
+    delivery_date = models.DateField(verbose_name='Дата доставки', blank=True, null=True)
     ealiest_delivery = models.BooleanField(verbose_name='Ранняя доставка', default=False)
     delivery_interval = models.ForeignKey(DeliveryInterval,
                                             on_delete=models.PROTECT,
@@ -173,5 +173,4 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.bouquet.name}: ' \
-               f' {self.delivery_date.strftime("%d.%m.%Y %H:%M")}' \
                f'по адресу: {self.delivery_address} - {self.status}'

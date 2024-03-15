@@ -1,13 +1,57 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.core import serializers
 
-from flower_shop.models import Bouquet
+from flower_shop.forms import OrderForm
+from flower_shop.models import Bouquet, Occasion
 from django.conf import settings
 from django.http import JsonResponse
 import stripe
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
-STRIPE_KEY = settings.STRIPE_PUBLIC_KEY 
+STRIPE_KEY = settings.STRIPE_PUBLIC_KEY
+
+
+def create_order(request, bouquet_id):
+    if request.method == 'POST':
+        form = OrderForm(request.POST, bouquet_id=bouquet_id)
+        if form.is_valid():
+            form.save_order()  # Создаем заказ на основе данных из формы
+            return redirect('index')
+    form = OrderForm()
+    return render(request, 'flower_shop/order.html', context={'form': form, 'bouquet_id': bouquet_id})
+
+
+def find_bouquet(request):
+
+    if 'event' in request.GET and 'price' in request.GET:
+        price_range = request.GET['price']
+        event_id = request.GET['event']
+
+        if price_range == "None":
+            price_range = None
+        else:
+            price_range = tuple(map(int, price_range.split('-')))
+
+        bouquets = Bouquet.objects.filter(occasion__id=event_id)
+
+        if price_range is not None and len(price_range) == 2:
+            bouquets = bouquets.filter(price__range=(price_range[0], price_range[1]))
+
+        return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets})
+
+    if 'event' in request.GET:
+        context = {'price': {'До 1000 руб.': '0-1000',
+                             '1000-5000 руб.': '1000-5000',
+                             'от 5000 руб.': '5000-0',
+                             'Не имеет значения': None}}
+        event = request.GET['event']
+        context['event'] = event
+        return render(request, 'flower_shop/quiz-step.html', context=context)
+
+    occasions = get_list_or_404(Occasion)
+    return render(request, 'flower_shop/quiz.html', context={'occasions': occasions})
+
 
 def view_bouquet(request, bouquet_id):
     bouquet = get_object_or_404(Bouquet, pk=bouquet_id)
@@ -31,11 +75,12 @@ def test_view(request):
 
 
 def checkout(request):
-    return render(request, 'flower_shop/order-step.html', context={'STRIPE_KEY':STRIPE_KEY})
+    return render(request, 'flower_shop/order-step.html', context={'STRIPE_KEY': STRIPE_KEY})
+
 
 def charge(request):
     if request.method == 'POST':
-        amount = 500  
+        amount = 500
         try:
             charge = stripe.Charge.create(
                 amount=amount,
