@@ -30,7 +30,7 @@ def create_order(request, bouquet_id):
 
 
 def find_bouquet(request):
-
+    form = ConsultingForm()
     if 'event' in request.GET and 'price' in request.GET:
         price_range = request.GET['price']
         event_id = request.GET['event']
@@ -45,7 +45,11 @@ def find_bouquet(request):
         if price_range is not None and len(price_range) == 2:
             bouquets = bouquets.filter(price__range=(price_range[0], price_range[1]))
 
-        return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets})
+        return render(request, 'flower_shop/catalog.html',
+                      context={'bouquets': bouquets,
+                               'form': form,
+                               'caption': 'Вам подойдут букеты',
+                               })
 
     if 'event' in request.GET:
         context = {'price': {'До 1000 руб.': '0-1000',
@@ -79,7 +83,10 @@ def show_catalog(request):
     all_bouquets = Bouquet.objects.all()
     paginator = Paginator(all_bouquets, 6)
     bouquets = paginator.get_page(1)
-    return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets, 'form': form})
+    return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets,
+                                                                'form': form,
+                                                                'caption': 'Все букеты',
+                                                                })
 
 
 def consultation(request):

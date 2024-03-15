@@ -11,7 +11,7 @@
   <section id="catalog">
     <div class="container p100">
       <div class="catalog">
-        <div class="title">Все букеты</div>
+        <div class="title">{{ caption }}</div>
         <div class="catalog__block">
           <div class="recommended__elems ficb">
             {% for bouquet in bouquets %}
@@ -24,7 +24,9 @@
             </div>
             {% endfor %}
           </div>
-          <button class="btn largeBtn catalog__btn" data-page="2">Показать ещё</button>
+          {% if caption == 'Все букеты' %}
+            <button class="btn largeBtn catalog__btn" data-page="2">Показать ещё</button>
+          {% endif %}
         </div>
       </div>
     </div>

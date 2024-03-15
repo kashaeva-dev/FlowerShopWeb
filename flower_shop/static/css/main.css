@@ -805,3 +805,8 @@ margin-bottom: 5px;
     top: 50%;
     max-width: 500px;
 }
+
+.quiz__elems_wrap {
+    flex-wrap: wrap;
+    row-gap: 10px;
+}
