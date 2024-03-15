@@ -13,6 +13,12 @@
           </div>
           <button type="submit" class="consultation__form_btn">Отправить</button>
         </div>
+        <label>
+          <div class="checkbox fic">
+            {{ form.agreement|add_class:"singUpConsultation__ckekbox" }}
+            <span class="chekbox__intro">Я согласен(а) с политикой конфидециоальности</span>
+          </div>
+        </label>
       </form>
     </div>
   </div>
