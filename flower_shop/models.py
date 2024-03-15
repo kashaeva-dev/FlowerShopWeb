@@ -1,7 +1,9 @@
 from django.db import models
 from account.models import Staff
 from phonenumber_field.modelfields import PhoneNumberField
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from courier_bot.bot import send_order
 
 class Occasion(models.Model):
     name = models.CharField(max_length=40, verbose_name='Повод')
@@ -181,3 +183,10 @@ class Order(models.Model):
         return f'{self.bouquet.name}: ' \
                # f' {self.delivery_date.strftime("%d.%m.%Y %H:%M")}' \
                # f'по адресу: {self.delivery_address} - {self.status}'
+
+
+@receiver(post_save, sender=Order)
+def handle_new_order(sender, instance, created, **kwargs):
+    if created:
+        send_order(instance)
+        

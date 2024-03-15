@@ -34,6 +34,8 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'])
 
 STRIPE_SECRET_KEY = 'sk_test_51OtuEKRtZCpz3rHAxMTjFrBRnfKA4rgSyYkTMLYfCAMo5Ua52Pl68gqbKILtZMmGiDzbXKBmUnIF0Q0aC0sqoY9R00xPrEOxKP'
 STRIPE_PUBLIC_KEY = 'pk_test_51OtuEKRtZCpz3rHA295I1Js9y2hTCoAE4dYiI5oTT4jAiV78AiEQShhxOBlml0e4IlUSyJyvREYUV2VzdA78hEEh00mcIsLKVZ'
+COURIER_TG_ID = 6113251330
+TELEGRAMBOT_TOKEN = '6580169427:AAE5CLiwjyjSCMNhR6iWHBi3clqne9lWkAs'
 # Application definition
 
 INSTALLED_APPS = [
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'flower_shop.apps.FlowerShopConfig',
     'rest_framework',
     'phonenumber_field',
+    'courier_bot'
 ]
 
 MIDDLEWARE = [
