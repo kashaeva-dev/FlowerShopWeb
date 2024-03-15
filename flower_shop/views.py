@@ -12,6 +12,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 STRIPE_KEY = settings.STRIPE_PUBLIC_KEY 
 
 def view_bouquet(request, bouquet_id):
+    form = ConsultingForm()
     bouquet = get_object_or_404(Bouquet, pk=bouquet_id)
     return render(request, 'flower_shop/card.html', context={'bouquet': bouquet})
 
