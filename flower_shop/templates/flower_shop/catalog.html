@@ -24,9 +24,15 @@
             </div>
             {% endfor %}
           </div>
-          {% if caption == 'Все букеты' %}
-            <button class="btn largeBtn catalog__btn" data-page="2">Показать ещё</button>
+          {% if has_next == True %}
+            {% if caption == 'Все букеты' %}
+              <button class="btn largeBtn catalog__btn" data-page="2" data-catalog="True">Показать ещё</button>
+            {% else %}
+              <button class="btn largeBtn catalog__btn" data-page="2" data-catalog="False" data-filters="{{ filters }}">Показать ещё</button>
+            {% endif %}
+          {% else %}
           {% endif %}
+
         </div>
       </div>
     </div>
@@ -36,7 +42,18 @@
   let catalogBlock = document.querySelector('.recommended__elems');
   loadMoreBtn.onclick = function () {
     let page = this.getAttribute('data-page');
-    fetch(`/bouquets/ajax/?page=${page}`)
+    let catalog = this.getAttribute('data-catalog');
+    let filters = this.getAttribute('data-filters');
+    console.log(catalog);
+    console.log(filters);
+    let url = '';
+    if (catalog === 'True') {
+      url = `/bouquets/ajax/?page=${page}`;
+    } else {
+      url = '/bouquets/ajax/?' + filters + `&page=${page}`;
+    }
+    console.log(url);
+    fetch(url)
       .then(response => response.json())
       .then(data => {
           console.log(data);

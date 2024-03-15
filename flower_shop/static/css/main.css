@@ -167,7 +167,6 @@ bottom: 0;
     align-items: end;
 	width: 398px;
 	height: 400px;
-	margin-bottom: 9px;
 	background-size: cover;
     background-position: center;
 }
@@ -346,6 +345,8 @@ opacity: 0.3;
 } */
 .catalog__block .recommended__elems {
 	margin-bottom: 10px;
+	justify-content: start;
+	gap: 9px;
 }
 .recommended__elems_first .recommended__block_sec {
 	background: url('../img/catalog/catalogBg1.jpg') no-repeat center bottom / cover;

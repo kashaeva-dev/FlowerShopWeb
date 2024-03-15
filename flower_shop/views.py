@@ -31,6 +31,7 @@ def create_order(request, bouquet_id):
 
 def find_bouquet(request):
     form = ConsultingForm()
+    bouquets = None
     if 'event' in request.GET and 'price' in request.GET:
         price_range = request.GET['price']
         event_id = request.GET['event']
@@ -45,16 +46,22 @@ def find_bouquet(request):
         if price_range is not None and len(price_range) == 2:
             bouquets = bouquets.filter(price__range=(price_range[0], price_range[1]))
 
+        paginator = Paginator(bouquets, 6)
+        bouquets = paginator.get_page(1)
+        has_next = bouquets.has_next() if bouquets.has_next() else ''
+
         return render(request, 'flower_shop/catalog.html',
                       context={'bouquets': bouquets,
                                'form': form,
                                'caption': 'Вам подойдут букеты',
+                                'has_next': has_next,
+                               'filters': f'event={event_id}&price={request.GET["price"]}',
                                })
 
     if 'event' in request.GET:
         context = {'price': {'До 1000 руб.': '0-1000',
                              '1000-5000 руб.': '1000-5000',
-                             'от 5000 руб.': '5000-0',
+                             'от 5000 руб.': '5000-1000000',
                              'Не имеет значения': None}}
         event = request.GET['event']
         context['event'] = event
@@ -83,9 +90,11 @@ def show_catalog(request):
     all_bouquets = Bouquet.objects.all()
     paginator = Paginator(all_bouquets, 6)
     bouquets = paginator.get_page(1)
+    has_next = bouquets.has_next() if bouquets.has_next() else ''
     return render(request, 'flower_shop/catalog.html', context={'bouquets': bouquets,
                                                                 'form': form,
                                                                 'caption': 'Все букеты',
+                                                                'has_next': has_next,
                                                                 })
 
 
@@ -134,13 +143,33 @@ def charge(request):
 
 
 def bouquet_list_ajax(request):
-    all_bouquets = Bouquet.objects.all()
-    paginator = Paginator(all_bouquets, 6)
+    if 'event' in request.GET and 'price' in request.GET:
+        price_range = request.GET['price']
+        event_id = request.GET['event']
+        page = request.GET.get('page')
 
-    page_number = request.GET.get('page')
-    bouquets = paginator.get_page(page_number)
+        if price_range == "None":
+            price_range = None
+        else:
+            price_range = tuple(map(int, price_range.split('-')))
 
-    bouquets_serialized = serializers.serialize('json', bouquets)
+        bouquets = Bouquet.objects.filter(occasion__id=event_id)
+
+        if price_range is not None and len(price_range) == 2:
+            bouquets = bouquets.filter(price__range=(price_range[0], price_range[1]))
+
+        paginator = Paginator(bouquets, 6)
+        bouquets = paginator.get_page(page)
+
+        bouquets_serialized = serializers.serialize('json', bouquets)
+    else:
+        all_bouquets = Bouquet.objects.all()
+        paginator = Paginator(all_bouquets, 6)
+
+        page_number = request.GET.get('page')
+        bouquets = paginator.get_page(page_number)
+
+        bouquets_serialized = serializers.serialize('json', bouquets)
 
     return JsonResponse({
         'bouquets': bouquets_serialized,
