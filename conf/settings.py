@@ -34,7 +34,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'])
 
 STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
 STRIPE_PUBLIC_KEY = env.str('STRIPE_PUBLIC_KEY')
-COURIER_TG_ID = env.int('COURIER_TG_ID')
+
 TELEGRAMBOT_TOKEN = env.str('TELEGRAMBOT_TOKEN')
 # Application definition
 

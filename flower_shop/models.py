@@ -1,7 +1,7 @@
 from django.db import models
 from account.models import Staff
 from phonenumber_field.modelfields import PhoneNumberField
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from courier_bot.bot import send_order
 
@@ -192,7 +192,9 @@ class Order(models.Model):
                # f'по адресу: {self.delivery_address} - {self.status}'
 
 
-@receiver(post_save, sender=Order)
-def handle_new_order(sender, instance, created, **kwargs):
-    if created:
-        send_order(instance)
+@receiver(pre_save, sender=Order)
+def handle_new_order(sender, instance, **kwargs):
+    if instance.pk:
+        old_instance = Order.objects.get(pk=instance.pk)
+        if old_instance.currier != instance.currier:
+            send_order(instance)
