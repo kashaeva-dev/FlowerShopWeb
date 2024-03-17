@@ -1,3 +1,5 @@
+
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -14,9 +16,14 @@
       <div class="order__block">
         <div class="order_items">
           <div class="title">Оплата</div>
+            
           <form action="{% url 'charge' %}" method="post" id="payment-form">
         {% csrf_token %}
+        <input type="hidden" name="order_price" value="{{ order.bouquet.price }}">
+        <input type="hidden" name="order_id" value="{{ order.id }}">
         <div class="form-row">
+            Сумма заказа: {{ order.bouquet.price }}
+            <br>
             <label for="card-element">
                 Кредитная карта или дебетовая карта
             </label>

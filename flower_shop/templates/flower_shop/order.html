@@ -15,6 +15,19 @@
           <div class="title">Оформление доставки</div>
             <form action="{% url 'create_order' bouquet_id %}" method="post" class="order__form">
                 {% csrf_token %}
+                
+            {% if form.errors %}
+                <div class="alert alert-danger mt-3">
+                    <strong>Ошибка:</strong> Пожалуйста, исправьте следующие ошибки.
+                    <ul>
+                        {% for error in form.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <br>
+            {% endif %}
+            
                 <div class="order__form_block ficb">
                     {{ form.fname }}
                     {{ form.tel }}
@@ -28,6 +41,8 @@
                         </div>
                     {% endfor %}
                 </div>
+            {{ form.online_payment.label }}
+            {{ form.online_payment }}
                 <div class="order__form_line"></div>
                 <div class="order__form_btns ficb">
                     <button type="submit" class="btn order__form_pay">Оплатить</button>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import DeliveryInterval, Order, Bouquet, Consulting
+from .models import DeliveryInterval, Order, Bouquet, Consulting, PaymentType
 from phonenumber_field.formfields import PhoneNumberField
 
 
@@ -16,6 +16,7 @@ class OrderForm(forms.Form):
                                        queryset=DeliveryInterval.objects.all(),
                                        empty_label=None,
                                        widget=forms.RadioSelect(attrs={'class': 'order__form_radio'}))
+    online_payment = forms.BooleanField(label='Оплата онлайн', initial=True, required=False)
 
     def __init__(self, *args, **kwargs):
         self.bouquet_id = kwargs.pop('bouquet_id', None)
@@ -27,6 +28,12 @@ class OrderForm(forms.Form):
         tel = cleaned_data['tel']
         adres = cleaned_data['adres']
         order_time = cleaned_data['orderTime']
+        online_payment = cleaned_data['online_payment']
+
+        if online_payment:
+            payment_type = PaymentType.objects.get(name='онлайн')
+        else:
+            payment_type = PaymentType.objects.get(name='наличными курьеру')
 
         bouquet = Bouquet.objects.get(id=self.bouquet_id)
 
@@ -35,7 +42,8 @@ class OrderForm(forms.Form):
             contact_phone=tel,
             delivery_address=adres,
             delivery_interval=order_time,
-            bouquet=bouquet
+            bouquet=bouquet,
+            payment_type=payment_type
         )
         return order
 

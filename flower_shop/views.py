@@ -1,11 +1,11 @@
 from django.core.paginator import Paginator
 
-from django.shortcuts import get_list_or_404
+from django.shortcuts import get_list_or_404, redirect
 
 from flower_shop.forms import OrderForm
-from flower_shop.models import Occasion
+from flower_shop.models import Occasion, Order
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.core import serializers
 
 from flower_shop.forms import ConsultingForm
@@ -20,12 +20,17 @@ STRIPE_KEY = settings.STRIPE_PUBLIC_KEY
 
 
 def create_order(request, bouquet_id):
+    form = OrderForm()
     if request.method == 'POST':
         form = OrderForm(request.POST, bouquet_id=bouquet_id)
         if form.is_valid():
-            form.save_order()  # Создаем заказ на основе данных из формы
-            return redirect('index')
-    form = OrderForm()
+            order = form.save_order()
+            if order.payment_type.name == 'наличными курьеру':
+                return redirect('index')
+            return render(request, 'flower_shop/order-step.html', context={
+                'STRIPE_KEY': STRIPE_KEY,
+                'order': order
+            })
     return render(request, 'flower_shop/order.html', context={'form': form, 'bouquet_id': bouquet_id})
 
 
@@ -127,7 +132,8 @@ def checkout(request):
 
 def charge(request):
     if request.method == 'POST':
-        amount = 500
+        amount = request.POST['order_price']
+        order_id = request.POST['order_id']
         try:
             charge = stripe.Charge.create(
                 amount=amount,
@@ -135,7 +141,8 @@ def charge(request):
                 description='Оплата заказа',
                 source=request.POST['stripeToken']
             )
-            return JsonResponse({'success': True})
+            Order.objects.filter(pk=order_id).update(is_paid=True)
+            return redirect('index')
         except stripe.error.CardError as e:
             return JsonResponse({'error': str(e)})
         except Exception as e:
