@@ -13,6 +13,7 @@ class Staff(models.Model):
     role = models.CharField(max_length=40, verbose_name='Роль', choices=STAFF_ROLE_CHOICES)
     start_date = models.DateTimeField(verbose_name='Дата начала работы', auto_now_add=True)
     end_date = models.DateTimeField(verbose_name='Дата увольнения', null=True, blank=True)
+    tg_id = models.BigIntegerField(verbose_name='Телеграм id', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Сотрудник'
