@@ -143,7 +143,7 @@ def charge(request):
         order_id = request.POST['order_id']
         try:
             charge = stripe.Charge.create(
-                amount=amount * 100,
+                amount=int(amount) * 100,
                 currency='rub',
                 description='Оплата заказа',
                 source=request.POST['stripeToken']
