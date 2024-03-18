@@ -38,10 +38,17 @@
 						</div>
 					</div>
                     <button class="btn largeBtn card__btn" onclick="window.location.href='{% url 'create_order' bouquet.id %}';">Заказать букет</button>
+					<div></div>
+					<button class="btn largeBtn result__items_block__btn" onclick="redirectToConsultation()">Заказать консультацию</button>
 				</div>
 			</div>
 		</div>
 </section>
+<script>
+function redirectToConsultation() {
+    window.location.href = "{% url 'consulting_request' %}";
+}
+</script>
 {% include 'flower_shop/consultation_footer.html' %}
 
 {% endblock %}

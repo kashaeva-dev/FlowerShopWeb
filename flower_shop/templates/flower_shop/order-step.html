@@ -22,17 +22,18 @@
         <input type="hidden" name="order_price" value="{{ order.bouquet.price }}">
         <input type="hidden" name="order_id" value="{{ order.id }}">
         <div class="form-row">
-            Сумма заказа: {{ order.bouquet.price }}
+            <span class="payment__info_price"><b>Сумма заказа:</b> {{ order.bouquet.price }} руб.</span>
             <br>
-            <label for="card-element">
-                Кредитная карта или дебетовая карта
+            <br>
+            <label class="payment__info_price" for="card-element">
+                Введите данные кредитной или дебетовой карты:
             </label>
-            <div id="card-element">
+            <div class="order__form_input orderStep_form_input" id="card-element">
                 <!-- Сюда подставится элемент Card UI -->
             </div>
             <div id="card-errors" role="alert"></div>
         </div>
-        <button>Оплатить</button>
+        <button class="btn order__form_pay">Оплатить</button>
     </form>
 
     <script>

@@ -575,12 +575,20 @@ height: 57px;
 }
 .result__items_block__btn {
 	margin-bottom: 10px;
-	margin-top: 0;
+	margin-top: 10px;
 }
 .result__items_block__btn:last-child {
 	margin-bottom: 0;
 }
-
+.result__items_block {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+.result__items_info {
+    font-size: 14px;
+	line-height: 145.02%;
+}
 /*order.html*/
 #order {
 	position: relative;
@@ -700,8 +708,12 @@ margin-bottom: 5px;
 }
 .orderStep_form_input {
 	height: 50px;
-	width: 291px;
-	margin-bottom: 10px;
+	width: 550px;
+	margin-bottom: 30px;
+	margin-top: 30px;
+	font-size: 24px;
+	line-height: 140.52%;
+	padding-top: 15px;
 }
 .order__form_item .orderStep_form_input {
 	width: 88px;
@@ -810,4 +822,11 @@ margin-bottom: 5px;
 .quiz__elems_wrap {
     flex-wrap: wrap;
     row-gap: 10px;
+}
+.payment__info_price {
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 103.52%;
+    color: #2D2D2D;
+    margin-bottom: 50px;
 }

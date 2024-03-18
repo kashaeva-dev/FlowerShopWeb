@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.paginator import Paginator
 
 from django.shortcuts import get_list_or_404, redirect
@@ -25,13 +27,18 @@ def create_order(request, bouquet_id):
         form = OrderForm(request.POST, bouquet_id=bouquet_id)
         if form.is_valid():
             order = form.save_order()
+            order.status = 'new'
+            order.delivery_date = order.created_at
+            order.save()
             if order.payment_type.name == 'наличными курьеру':
-                return redirect('index')
+                return render(request, 'flower_shop/result.html', context={'order': order})
             return render(request, 'flower_shop/order-step.html', context={
                 'STRIPE_KEY': STRIPE_KEY,
                 'order': order
             })
-    return render(request, 'flower_shop/order.html', context={'form': form, 'bouquet_id': bouquet_id})
+    return render(request, 'flower_shop/order.html', context={'form': form,
+                                                              'bouquet_id': bouquet_id,
+                                                              })
 
 
 def find_bouquet(request):
@@ -136,13 +143,15 @@ def charge(request):
         order_id = request.POST['order_id']
         try:
             charge = stripe.Charge.create(
-                amount=amount,
-                currency='usd',
+                amount=amount * 100,
+                currency='rub',
                 description='Оплата заказа',
                 source=request.POST['stripeToken']
             )
-            Order.objects.filter(pk=order_id).update(is_paid=True)
-            return redirect('index')
+            order = Order.objects.filter(pk=order_id).first()
+            order.is_paid=True
+            order.save()
+            return render(request, 'flower_shop/result.html', context={'order': order})
         except stripe.error.CardError as e:
             return JsonResponse({'error': str(e)})
         except Exception as e:

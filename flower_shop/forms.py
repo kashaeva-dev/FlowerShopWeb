@@ -1,9 +1,13 @@
+import datetime
+
 from django import forms
 from .models import DeliveryInterval, Order, Bouquet, Consulting, PaymentType
 from phonenumber_field.formfields import PhoneNumberField
 
 
+
 class OrderForm(forms.Form):
+    current_time = datetime.datetime.now().time()
     fname = forms.CharField(label='Имя', max_length=100,
                             widget=forms.TextInput(attrs={'class': 'order__form_input', 'placeholder': 'Введите Имя'}))
     tel = forms.CharField(label='Телефон', max_length=15,
@@ -13,7 +17,7 @@ class OrderForm(forms.Form):
                             widget=forms.TextInput(
                                 attrs={'class': 'order__form_input', 'placeholder': 'Адрес доставки'}))
     orderTime = forms.ModelChoiceField(label='Время заказа',
-                                       queryset=DeliveryInterval.objects.all(),
+                                       queryset=DeliveryInterval.objects.filter(start_time__gte=current_time),
                                        empty_label=None,
                                        widget=forms.RadioSelect(attrs={'class': 'order__form_radio'}))
     online_payment = forms.BooleanField(label='Оплата онлайн', initial=True, required=False)

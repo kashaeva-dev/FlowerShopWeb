@@ -56,14 +56,13 @@
     fetch(url)
       .then(response => response.json())
       .then(data => {
-          console.log(data);
           let bouquets = JSON.parse(data.bouquets);
           bouquets.forEach(bouquet => {
             let div = document.createElement('div');
             div.classList.add('recommended__block');
             div.style.backgroundImage = `url('/media/${bouquet.fields.image}')`;
             div.innerHTML = `
-              <a href="/bouquet/${bouquet.fields.id}" class="recommended__block_link"></a>
+              <a href="/bouquet/${bouquet.pk}" class="recommended__block_link"></a>
               <div class="recommended__block_elems ficb">
                 <span class="recommended__block_intro">${bouquet.fields.name}</span>
                 <span class="recommended__block_price">${bouquet.fields.price} руб.</span>
